@@ -1,0 +1,13 @@
+data/
+runs/
+artifacts/
+raw/
+.colab*
+__pycache__/
+*.pyc
+*.pt
+*.pth
+*.tar.gz
+.DS_Store
+annotations/source_review.json
+annotations/replacement_candidates.json

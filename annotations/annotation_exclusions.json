@@ -1,0 +1,72 @@
+[
+  {
+    "path": "images_OBJ004/OBJ004_073.jpg",
+    "object_id": "OBJ004",
+    "split": "train",
+    "reason": "Target not visible or too small for a reliable training annotation",
+    "replacement_review_id": 365
+  },
+  {
+    "path": "images_OBJ004/OBJ004_038.jpg",
+    "object_id": "OBJ004",
+    "split": "test",
+    "reason": "Target not visible or too small for a reliable training annotation",
+    "replacement_review_id": 369
+  },
+  {
+    "path": "images_OBJ013/OBJ013_BG001.jpg",
+    "object_id": "OBJ013",
+    "split": "train",
+    "reason": "Target not visible or too small for a reliable training annotation",
+    "replacement_review_id": 372
+  },
+  {
+    "path": "images_OBJ016/OBJ016_066.jpg",
+    "object_id": "OBJ016",
+    "split": "train",
+    "reason": "Target not visible or too small for a reliable training annotation",
+    "replacement_review_id": 375
+  },
+  {
+    "path": "images_OBJ025/OBJ025_045.jpg",
+    "object_id": "OBJ025",
+    "split": "train",
+    "reason": "Target not visible or too small for a reliable training annotation",
+    "replacement_review_id": 379
+  },
+  {
+    "path": "images_OBJ044/OBJ044_018.jpg",
+    "object_id": "OBJ044",
+    "split": "train",
+    "reason": "Target not visible or too small for a reliable training annotation",
+    "replacement_review_id": 380
+  },
+  {
+    "path": "images_OBJ059/OBJ059_057.jpg",
+    "object_id": "OBJ059",
+    "split": "test",
+    "reason": "Target not visible or too small for a reliable training annotation",
+    "replacement_review_id": 385
+  },
+  {
+    "path": "images_OBJ061/OBJ061_083.jpg",
+    "object_id": "OBJ061",
+    "split": "test",
+    "reason": "Target not visible or too small for a reliable training annotation",
+    "replacement_review_id": 386
+  },
+  {
+    "path": "images_OBJ062/OBJ062_081.jpg",
+    "object_id": "OBJ062",
+    "split": "test",
+    "reason": "Target not visible or too small for a reliable training annotation",
+    "replacement_review_id": 389
+  },
+  {
+    "path": "images_OBJ068/OBJ068_082.jpg",
+    "object_id": "OBJ068",
+    "split": "train",
+    "reason": "Target not visible or too small for a reliable training annotation",
+    "replacement_review_id": 393
+  }
+]
