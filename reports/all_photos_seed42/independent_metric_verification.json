@@ -1,0 +1,11 @@
+{
+  "verified": true,
+  "epochs": 50,
+  "selected_epoch": 50,
+  "composites": 10000,
+  "threshold": 0.65,
+  "test_mAP50": 0.9865367757872763,
+  "test_mAP50_95": 0.9426048642466124,
+  "test_all_objects": 0.929,
+  "gpu_stopped": true
+}

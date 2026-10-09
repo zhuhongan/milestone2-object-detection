@@ -1,0 +1,7 @@
+{
+  "selected_epoch": 50,
+  "validation_mAP50_95": 0.94349,
+  "rule": "Maximum validation mAP50-95; latest tied checkpoint, confirmed by save callback",
+  "checkpoint_sha256": "a2c56355ab06cc473390c2bcc618bd5af71cebba7d8dd2e7a5d2d7410c4a161c",
+  "test_accessed": false
+}

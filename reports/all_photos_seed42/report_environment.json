@@ -1,0 +1,9 @@
+{
+  "python": "3.12.14",
+  "python_docx": "1.2.0",
+  "matplotlib": "3.10.0",
+  "numpy": "2.3.5",
+  "Pillow": "12.3.0",
+  "renderer": "LibreOfficeDev 26.8.0.0.alpha0 2c87e51eeaa2b413ff4ae097b2705eea1995d8e5",
+  "runtime": "Codex bundled document runtime; matplotlib dependencies pinned in report-requirements.txt"
+}

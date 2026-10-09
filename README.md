@@ -26,7 +26,36 @@ python run_colab.py --session milestone2-yolov8s-all-photos-YOUR_UNIQUE_NAME \
   --output artifacts/yolov8s_all_photos_seed42
 ```
 
-The current Word report, saved model and metrics below describe the **original 1,460-image baseline**. They have not been updated with unmeasured results from the expanded dataset. Retraining and reevaluating on the expanded dataset is required before reporting new performance.
+The expanded model completed **50 epochs on a Colab A100**. Validation selected epoch **50**. On the 1,000 expanded test composites, **mAP50 is 98.65% and mAP50–95 is 94.26%**. The validation-selected confidence threshold is **0.65**; test micro precision is **98.77%**, recall **97.80%**, F1 **0.9829**, and every annotated object is correctly detected with no false positives in **929/1,000 images (92.90%)**.
+
+- [Updated Word report with new plots and detection examples](reports/all_photos_seed42/milestone2_report.docx)
+- [Expanded experiment results and reproducible evidence](reports/all_photos_seed42/)
+- Selected weights in the original workspace: `artifacts/yolov8s_all_photos_seed42/experiment/runs/yolov8s_seed42/weights/best.pt`
+- Selected checkpoint SHA-256: `a2c56355ab06cc473390c2bcc618bd5af71cebba7d8dd2e7a5d2d7410c4a161c`
+
+The earlier 1,460-image results below remain a historical baseline. The two experiments have different synthetic test populations; their score difference does not isolate the causal effect of adding training sources. Neither experiment establishes accuracy on independently photographed real multi-object scenes.
+
+```bash
+python predict.py --weights artifacts/yolov8s_all_photos_seed42/experiment/runs/yolov8s_seed42/weights/best.pt \
+  --source /path/to/multi_object_image.jpg --device cpu \
+  --threshold-file reports/all_photos_seed42/operating_threshold.json \
+  --output predictions_all_photos
+python verify_saved_results.py --reports reports/all_photos_seed42
+```
+
+Rebuild the new report from the verified experiment and frozen images:
+
+```bash
+python analyze_results.py --experiment artifacts/yolov8s_all_photos_seed42/experiment \
+  --dataset data/synthetic_all_photos_seed42 \
+  --annotations annotations/all_photos_seed42/positive_source_annotations.json \
+  --annotation-summary annotations/all_photos_seed42/annotation_summary.json \
+  --baseline reports/report_data.json --output reports/all_photos_seed42
+python render_word_report.py --data reports/all_photos_seed42/report_data.json \
+  --output reports/all_photos_seed42/milestone2_report.docx
+```
+
+Use the separate report environment in `report-requirements.txt` for figure and Word generation.
 
 For fresh model-assisted proposals, `inventory_all_sources.py` reads the finalized Milestone 1 manifests, `run_annotation_colab.py` runs the GPU proposal job, and `review_all_annotations.py prepare` creates review sheets. The archived reviewed JSON annotations are sufficient for deterministic synthesis; rerunning proposals cannot replace recorded visual review decisions. Proposal-model revision, environment and GPU-release evidence are archived with the expanded annotations.
 

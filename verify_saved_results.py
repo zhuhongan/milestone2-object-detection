@@ -1,4 +1,5 @@
 """Recompute reported results from committed evidence without a GPU or raw photos."""
+import argparse
 import csv
 import hashlib
 import json
@@ -14,7 +15,10 @@ def read_csv(path):
 
 
 def main():
-    reports = ROOT / "reports"
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--reports',type=Path,default=ROOT/'reports')
+    args=parser.parse_args()
+    reports = args.reports.resolve()
     evidence = reports / "evidence"
     load = lambda path: json.loads(path.read_text())
     metrics = load(reports / "metrics.json")
@@ -29,7 +33,9 @@ def main():
     history = read_csv(evidence / "training_history.csv")
     assert len(history) == 50
     assert hashlib.sha256(manifest_path.read_bytes()).hexdigest() == protocol["generated_manifest_sha256"]
-    assert hashlib.sha256((ROOT / "annotations/source_annotations.json").read_bytes()).hexdigest() == protocol["source_annotations_sha256"]
+    data=load(reports/'report_data.json')
+    annotations=ROOT/data.get('source_annotations_relative_path','annotations/source_annotations.json')
+    assert hashlib.sha256(annotations.read_bytes()).hexdigest() == protocol["source_annotations_sha256"]
     receipt = load(evidence / "best_epoch_receipt.json")
     assert receipt["epoch"] == selection["selected_epoch"]
     peak = max(float(row["metrics/mAP50-95(B)"]) for row in history)

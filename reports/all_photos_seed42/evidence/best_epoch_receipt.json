@@ -1,0 +1,5 @@
+{
+  "epoch": 50,
+  "fitness": 0.94349,
+  "rule": "Library saves the latest tied best checkpoint"
+}

@@ -1,5 +1,5 @@
 """Verify completed artifacts and create report figures from saved detections."""
-import argparse,csv,json,os,sys
+import argparse,csv,json,os,sys,shutil
 from collections import defaultdict
 from pathlib import Path
 os.environ.setdefault('MPLCONFIGDIR',str(Path(__file__).resolve().parent/'artifacts/matplotlib-cache'))
@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from PIL import Image,ImageDraw,ImageFont
 import numpy as np
 from generate_dataset import sha256
-from evaluate_predictions import evaluate
+from evaluate_predictions import evaluate,iou
 
 HERE=Path(__file__).resolve().parent
 
@@ -34,7 +34,7 @@ def draw_boxes(image,items,color,confidence=False):
  return out
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--experiment',type=Path,required=True);p.add_argument('--dataset',type=Path,default=HERE/'data/synthetic_seed42');p.add_argument('--output',type=Path,default=HERE/'reports');a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--experiment',type=Path,required=True);p.add_argument('--dataset',type=Path,default=HERE/'data/synthetic_seed42');p.add_argument('--output',type=Path,default=HERE/'reports');p.add_argument('--annotations',type=Path,default=HERE/'annotations/source_annotations.json');p.add_argument('--annotation-summary',type=Path);p.add_argument('--baseline',type=Path);a=p.parse_args()
  run=a.experiment.resolve()/'runs';dataset=a.dataset.resolve();out=a.output.resolve();plots=out/'plots';plots.mkdir(parents=True,exist_ok=True)
  complete=json.loads((run/'completed.json').read_text());metrics=json.loads((run/'metrics.json').read_text());selection=json.loads((run/'selection.json').read_text());operating=json.loads((run/'test_operating_metrics.json').read_text());env=json.loads((run/'environment.json').read_text());audit=json.loads((dataset/'audit.json').read_text());mapping=json.loads((dataset/'class_mapping.json').read_text());receipt=json.loads((run/'best_epoch_receipt.json').read_text());history=readcsv(run/'yolov8s_seed42/results.csv');perclass=readcsv(run/'per_class_metrics.csv');preds=readcsv(run/'test_predictions_candidates.csv');fixed=[r for r in preds if float(r['confidence'])>=operating['confidence']];manifest=[json.loads(s) for s in (dataset/'manifest.jsonl').read_text().splitlines()]
  assert complete['completed'] and len(history)==complete['epochs']==50
@@ -42,6 +42,9 @@ def main():
  assert receipt['epoch']==selection['selected_epoch']==complete['selected_epoch']
  assert abs(max(float(r['metrics/mAP50-95(B)']) for r in history)-selection['validation_mAP50_95'])<1e-5
  assert complete['dataset_audit']==audit
+ protocol=json.loads((run/'training_protocol.json').read_text())
+ assert protocol['generated_manifest_sha256']==sha256(dataset/'manifest.jsonl')
+ assert protocol['source_annotations_sha256']==sha256(a.annotations)
  recomputed=evaluate(preds,[r for r in manifest if r['split']=='test'],operating['confidence']);assert recomputed==operating
  for split in ['val','test']:
   rows=[r for r in perclass if r['split']==split];assert len(rows)==73;assert {r['object_id'] for r in rows}=={m['object_id'] for m in mapping}
@@ -64,6 +67,16 @@ def main():
  generation.save(plots/'generation_examples.png')
  # Failure galleries are explicitly chosen for errors; show ground truth beside prediction.
  errors=sorted([r for r in operating['per_image'] if r['fn'] or r['fp']],key=lambda r:(-r['fn'],-r['fp'],r['image']))[:2]
+ failure_confusions=[]
+ if errors:
+  targets=truth[errors[0]['image']]['targets']
+  for pred in byimage[errors[0]['image']]:
+   box=[float(pred[k]) for k in ['x1','y1','x2','y2']]
+   overlaps=[(iou(box,target['xyxy']),target) for target in targets]
+   if not overlaps:continue
+   overlap,target=max(overlaps,key=lambda pair:pair[0])
+   if overlap>=.5 and pred['object_id']!=target['object_id'] and not any(score>=.5 and gt['object_id']==pred['object_id'] for score,gt in overlaps):
+    failure_confusions.append({'target_object_id':target['object_id'],'predicted_object_id':pred['object_id']})
  failure=Image.new('RGB',(1280,1390),'white');draw=ImageDraw.Draw(failure)
  for j,row in enumerate(errors):
   name=row['image'];im=Image.open(dataset/'images/test'/name).convert('RGB');y=j*695
@@ -85,10 +98,27 @@ def main():
  ax.barh([r['object_id']+'  '+r['object_name'] for r in worst],vals,color='#087e83');ax.invert_yaxis();ax.set_xlim(0,100);ax.set_xlabel('Test AP50–95 (%)');ax.set_title('Ten lowest class AP scores')
  for i,v in enumerate(vals):ax.text(v+1,i,f'{v:.1f}%',va='center',fontsize=9)
  fig.savefig(plots/'per_class_ap.png',dpi=200);plt.close(fig)
- data={'repository':'https://github.com/zhuhongan/milestone2-object-detection','complete':complete,'metrics':metrics,'operating':operating,'selection':selection,'environment':env,'audit':audit,'worst_classes':worst,'sample_files':selected,'sample_coordinates':byimage[selected[0]],'failure_examples':errors,'class_mapping':mapping,'verified':True,'generated_dataset_manifest_sha256':sha256(dataset/'manifest.jsonl'),'best_checkpoint_sha256':complete['best_sha256']}
+ annotation_records=json.loads(a.annotations.read_text())['selected_sources']
+ data={'repository':'https://github.com/zhuhongan/milestone2-object-detection','complete':complete,'metrics':metrics,'operating':operating,'selection':selection,'environment':env,'audit':audit,'worst_classes':worst,'sample_files':selected,'sample_coordinates':byimage[selected[0]],'sample_image_metrics':next(r for r in operating['per_image'] if r['image']==selected[0]),'failure_examples':errors,'failure_class_confusions':failure_confusions,'class_mapping':mapping,'verified':True,'generated_dataset_manifest_sha256':sha256(dataset/'manifest.jsonl'),'best_checkpoint_sha256':complete['best_sha256'],'source_annotations_relative_path':a.annotations.resolve().relative_to(HERE).as_posix(),'annotation_summary':json.loads(a.annotation_summary.read_text()) if a.annotation_summary else {'positive_sources_for_synthesis':len(annotation_records),'unique_positive_target_instances':sum(len(r['boxes_xyxy_normalized']) for r in annotation_records)},'per_class_source_counts':{split:{m['object_id']:sum(r['split']==split and r['object_id']==m['object_id'] for r in annotation_records) for m in mapping} for split in ['train','val','test']}}
+ if a.baseline:
+  baseline=json.loads(a.baseline.read_text());assert baseline['verified']
+  data['baseline']={k:baseline[k] for k in ['metrics','operating','audit','selection']}
+  labels=['mAP50','mAP50–95','Micro F1','All objects correct']
+  old=[baseline['metrics']['test']['mAP50'],baseline['metrics']['test']['mAP50_95'],baseline['operating']['f1'],baseline['operating']['all_objects_accuracy']]
+  new=[metrics['test']['mAP50'],metrics['test']['mAP50_95'],operating['f1'],operating['all_objects_accuracy']]
+  fig,ax=plt.subplots(figsize=(8.5,4),layout='constrained');x=np.arange(4);width=.34
+  for offset,values,label,color in [(-width/2,old,'Earlier subset','#9aadb8'),(width/2,new,'Expanded dataset','#087e83')]:
+   bars=ax.bar(x+offset,np.array(values)*100,width,label=label,color=color)
+   ax.bar_label(bars,fmt='%.1f',padding=3,fontsize=9)
+  ax.set_xticks(x,labels);ax.set_ylim(0,120);ax.set_yticks([0,20,40,60,80,100]);ax.set_ylabel('Score × 100');ax.set_title('Completed experiments on different synthetic test sets');ax.legend(frameon=False,loc='upper right');ax.grid(axis='y',alpha=.15)
+  fig.savefig(plots/'experiment_comparison.png',dpi=200);plt.close(fig)
  (out/'report_data.json').write_text(json.dumps(data,indent=2)+'\n')
  for name in ['metrics.json','selection.json','operating_threshold.json','test_operating_metrics.json','per_class_metrics.csv','environment.json','training_protocol.json']:
   (out/name).write_bytes((run/name).read_bytes())
+ evidence=out/'evidence';evidence.mkdir(exist_ok=True)
+ for source,name in [(dataset/'manifest.jsonl','generated_manifest.jsonl'),(dataset/'audit.json','dataset_audit.json'),(dataset/'validation.json','dataset_validation.json'),(run/'yolov8s_seed42/results.csv','training_history.csv'),(run/'best_epoch_receipt.json','best_epoch_receipt.json'),(run/'val_predictions_candidates.csv','val_predictions_candidates.csv'),(run/'test_predictions_candidates.csv','test_predictions_candidates.csv'),(run/'test_detections.csv','test_detections.csv'),(a.experiment.parent/'session_receipt.json','session_receipt.json')]:
+  shutil.copyfile(source,evidence/name)
+ (evidence/'training_source_sha256.json').write_text(json.dumps({'annotations':a.annotations.resolve().relative_to(HERE).as_posix(),'sha256':sha256(a.annotations)},indent=2)+'\n')
  (out/'verification.json').write_text(json.dumps({'completed_50_epochs':True,'checkpoint_checksums':True,'selection_peak_confirmed':True,'official_class_mapping':True,'73_test_class_AP_scores':True,'independent_prediction_metric_recomputation':True},indent=2)+'\n')
  print(json.dumps({'report_assets_ready':str(out),'test':metrics['test'],'operating':{k:v for k,v in operating.items() if k!='per_image'}},indent=2))
 if __name__=='__main__':main()
