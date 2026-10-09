@@ -9,5 +9,6 @@ __pycache__/
 *.pth
 *.tar.gz
 .DS_Store
+.venv*/
 annotations/source_review.json
 annotations/replacement_candidates.json

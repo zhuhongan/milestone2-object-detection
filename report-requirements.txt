@@ -1,0 +1,4 @@
+python-docx==1.2.0
+matplotlib==3.10.0
+Pillow==11.3.0
+numpy==2.1.3

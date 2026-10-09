@@ -45,7 +45,7 @@ def main():
  best=YOLO(str(run/'weights/best.pt'));metrics={};perclass=[]
  for split in ['val','test']:
   result=best.val(data=str(cfgpath),split=split,imgsz=640,batch=a.batch,device=a.device,workers=4,conf=.001,iou=.7,max_det=100,plots=True,save_json=True,project=str(output),name=f'{split}_evaluation',exist_ok=False,verbose=False)
-  metrics[split]={'precision':float(result.box.mp),'recall':float(result.box.mr),'mAP50':float(result.box.map50),'mAP50_95':float(result.box.map),'metric_confidence':'PR/AP curves evaluated from confidence 0.001; reported mean precision/recall at library validation F1 operating point','nms_iou':.7,'images':audit['counts'][split]['images'],'target_instances':audit['counts'][split]['target_instances']}
+  metrics[split]={'precision':float(result.box.mp),'recall':float(result.box.mr),'mAP50':float(result.box.map50),'mAP50_95':float(result.box.map),'metric_confidence':'PR/AP curves evaluated from confidence 0.001; class-mean precision/recall at the best mean-F1 point on this evaluated split; separate operational threshold selected on validation only','nms_iou':.7,'images':audit['counts'][split]['images'],'target_instances':audit['counts'][split]['target_instances']}
   for j,c in enumerate(result.box.ap_class_index):
    c=int(c);perclass.append({'split':split,**{k:mapping[c][k] for k in ['class_index','object_id','object_name']},'precision':float(result.box.p[j]),'recall':float(result.box.r[j]),'AP50':float(result.box.ap50[j]),'AP50_95':float(result.box.ap[j])})
  write_json(output/'metrics.json',metrics)

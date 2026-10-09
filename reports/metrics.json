@@ -1,0 +1,22 @@
+{
+  "val": {
+    "precision": 0.7976885019080692,
+    "recall": 0.7532123280200002,
+    "mAP50": 0.8357006415513233,
+    "mAP50_95": 0.6944751221865143,
+    "metric_confidence": "PR/AP curves evaluated from confidence 0.001; reported mean precision/recall at library validation F1 operating point",
+    "nms_iou": 0.7,
+    "images": 146,
+    "target_instances": 455
+  },
+  "test": {
+    "precision": 0.8048658068486381,
+    "recall": 0.6154160009165033,
+    "mAP50": 0.7130617888564186,
+    "mAP50_95": 0.5785443496392705,
+    "metric_confidence": "PR/AP curves evaluated from confidence 0.001; reported mean precision/recall at library validation F1 operating point",
+    "nms_iou": 0.7,
+    "images": 146,
+    "target_instances": 442
+  }
+}

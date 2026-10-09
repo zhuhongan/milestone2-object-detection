@@ -1,0 +1,13 @@
+{
+  "docx_sha256": "29fd3072ee569611874597d2606218a03827e167bcc67759da798f19b142d17d",
+  "rendered_pages": 5,
+  "rendered_with": "Bundled documents skill renderer and LibreOffice",
+  "page_images_visually_inspected": true,
+  "quality_checks": [
+    "No clipping or overlaps",
+    "Tables and figures remain readable",
+    "Captions stay with figures",
+    "No blank or isolated-caption pages",
+    "Reported metrics independently recomputed from evidence"
+  ]
+}

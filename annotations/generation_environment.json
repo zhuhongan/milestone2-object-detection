@@ -1,0 +1,9 @@
+{
+  "stage": "source annotation review and frozen composite generation",
+  "python": "3.12.14",
+  "pillow": "12.3.0",
+  "numpy": "2.3.5",
+  "seed": 42,
+  "generation_entrypoint": "generate_dataset.py",
+  "training_environment": "Separately pinned in requirements.txt; exact Colab installed packages saved in experiment/runs/environment.json"
+}

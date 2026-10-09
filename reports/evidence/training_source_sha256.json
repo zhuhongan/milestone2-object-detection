@@ -1,0 +1,16 @@
+{
+  "note": "Hashes of scripts in the actual Colab experiment export; later reporting and descriptive metadata edits do not change trained weights.",
+  "sha256": {
+    "evaluate_predictions.py": "6a96b38d75e35e809433eb9cd79101e25337c6ea441f0e62beb0543403111211",
+    "validate_dataset.py": "9543b1e9f0bd1d0a51b8590573f7f2b0302f2dfba3e8eef84c10f26ed00491ce",
+    "generate_dataset.py": "c722bcf636f1430a175c07e5d282d5a4e5cffada83a747e678be6d2ae1c423ca",
+    "predict.py": "70efbb7e3dae5351ee673cb80978ba7afee49d70a5ac0d86d0503e969459d77b",
+    "export_helpers.py": "6df750450cf1a10a5c8d8ab246ce317f07a7b706918c3b673539a63d1dc9111d",
+    "colab_worker.py": "f42bb09b91abe0b86ee8bf0e88c0660564d42c82ddd48e27b55b741d3fd31a0c",
+    "transfer.py": "a42a5b5b880cd1cb98369f2999fadc4c83715c7cf3068d6ba32fb30a3e5b8ebf",
+    "finalize_annotations.py": "f5e6089f8244131e812b77bdd0a1318511d7e381dc624f79c4d3e77cc75cb12b",
+    "train_detector.py": "1432a1fb57e0cf136db9393b024235b1e14e0161b5bb4f9fbd521d5368643d56",
+    "run_colab.py": "ce7b0076f14a8a01ea219bbcc4f2139a47ed4e857dbeda4a9220ba7b8e9d69d0",
+    "select_sources.py": "4a6aca1595b49407a4beac4315e83bca9d6b109404135afed59841679b1a783a"
+  }
+}
