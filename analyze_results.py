@@ -34,7 +34,7 @@ def draw_boxes(image,items,color,confidence=False):
  return out
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--experiment',type=Path,required=True);p.add_argument('--dataset',type=Path,default=HERE/'data/synthetic_seed42');p.add_argument('--output',type=Path,default=HERE/'reports');p.add_argument('--annotations',type=Path,default=HERE/'annotations/source_annotations.json');p.add_argument('--annotation-summary',type=Path);p.add_argument('--baseline',type=Path);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--experiment',type=Path,required=True);p.add_argument('--dataset',type=Path,default=HERE/'data/synthetic_all_photos_seed42');p.add_argument('--output',type=Path,default=HERE/'reports/all_photos_seed42');p.add_argument('--annotations',type=Path,default=HERE/'annotations/all_photos_seed42/positive_source_annotations.json');p.add_argument('--annotation-summary',type=Path,default=HERE/'annotations/all_photos_seed42/annotation_summary.json');a=p.parse_args()
  run=a.experiment.resolve()/'runs';dataset=a.dataset.resolve();out=a.output.resolve();plots=out/'plots';plots.mkdir(parents=True,exist_ok=True)
  complete=json.loads((run/'completed.json').read_text());metrics=json.loads((run/'metrics.json').read_text());selection=json.loads((run/'selection.json').read_text());operating=json.loads((run/'test_operating_metrics.json').read_text());env=json.loads((run/'environment.json').read_text());audit=json.loads((dataset/'audit.json').read_text());mapping=json.loads((dataset/'class_mapping.json').read_text());receipt=json.loads((run/'best_epoch_receipt.json').read_text());history=readcsv(run/'yolov8s_seed42/results.csv');perclass=readcsv(run/'per_class_metrics.csv');preds=readcsv(run/'test_predictions_candidates.csv');fixed=[r for r in preds if float(r['confidence'])>=operating['confidence']];manifest=[json.loads(s) for s in (dataset/'manifest.jsonl').read_text().splitlines()]
  assert complete['completed'] and len(history)==complete['epochs']==50
@@ -100,18 +100,6 @@ def main():
  fig.savefig(plots/'per_class_ap.png',dpi=200);plt.close(fig)
  annotation_records=json.loads(a.annotations.read_text())['selected_sources']
  data={'repository':'https://github.com/zhuhongan/milestone2-object-detection','complete':complete,'metrics':metrics,'operating':operating,'selection':selection,'environment':env,'audit':audit,'worst_classes':worst,'sample_files':selected,'sample_coordinates':byimage[selected[0]],'sample_image_metrics':next(r for r in operating['per_image'] if r['image']==selected[0]),'failure_examples':errors,'failure_class_confusions':failure_confusions,'class_mapping':mapping,'verified':True,'generated_dataset_manifest_sha256':sha256(dataset/'manifest.jsonl'),'best_checkpoint_sha256':complete['best_sha256'],'source_annotations_relative_path':a.annotations.resolve().relative_to(HERE).as_posix(),'annotation_summary':json.loads(a.annotation_summary.read_text()) if a.annotation_summary else {'positive_sources_for_synthesis':len(annotation_records),'unique_positive_target_instances':sum(len(r['boxes_xyxy_normalized']) for r in annotation_records)},'per_class_source_counts':{split:{m['object_id']:sum(r['split']==split and r['object_id']==m['object_id'] for r in annotation_records) for m in mapping} for split in ['train','val','test']}}
- if a.baseline:
-  baseline=json.loads(a.baseline.read_text());assert baseline['verified']
-  data['baseline']={k:baseline[k] for k in ['metrics','operating','audit','selection']}
-  labels=['mAP50','mAP50–95','Micro F1','All objects correct']
-  old=[baseline['metrics']['test']['mAP50'],baseline['metrics']['test']['mAP50_95'],baseline['operating']['f1'],baseline['operating']['all_objects_accuracy']]
-  new=[metrics['test']['mAP50'],metrics['test']['mAP50_95'],operating['f1'],operating['all_objects_accuracy']]
-  fig,ax=plt.subplots(figsize=(8.5,4),layout='constrained');x=np.arange(4);width=.34
-  for offset,values,label,color in [(-width/2,old,'Earlier subset','#9aadb8'),(width/2,new,'Expanded dataset','#087e83')]:
-   bars=ax.bar(x+offset,np.array(values)*100,width,label=label,color=color)
-   ax.bar_label(bars,fmt='%.1f',padding=3,fontsize=9)
-  ax.set_xticks(x,labels);ax.set_ylim(0,120);ax.set_yticks([0,20,40,60,80,100]);ax.set_ylabel('Score × 100');ax.set_title('Completed experiments on different synthetic test sets');ax.legend(frameon=False,loc='upper right');ax.grid(axis='y',alpha=.15)
-  fig.savefig(plots/'experiment_comparison.png',dpi=200);plt.close(fig)
  (out/'report_data.json').write_text(json.dumps(data,indent=2)+'\n')
  for name in ['metrics.json','selection.json','operating_threshold.json','test_operating_metrics.json','per_class_metrics.csv','environment.json','training_protocol.json']:
   (out/name).write_bytes((run/name).read_bytes())

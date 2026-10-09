@@ -16,7 +16,7 @@ def read_csv(path):
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('--reports',type=Path,default=ROOT/'reports')
+    parser.add_argument('--reports',type=Path,default=ROOT/'reports/all_photos_seed42')
     args=parser.parse_args()
     reports = args.reports.resolve()
     evidence = reports / "evidence"

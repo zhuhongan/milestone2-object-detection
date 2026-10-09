@@ -1,9 +1,10 @@
 {
-  "docx_sha256": "8dde0630fc9c730ca1d4adda5bc86d43ad5d87f709ea80d5fe5bf7da616c8625",
-  "pages": 6,
+  "docx_sha256": "85ebc62f52b270b9fd53335240c46d14ba1f3268fa9fc631c71d1f1a10ca41ae",
+  "pages": 5,
   "all_pages_visually_reviewed": true,
   "review_detail": "original",
   "no_clipping_overlap_or_unintended_empty_pages": true,
   "metrics_and_sample_ids_verified": true,
-  "checked_at_utc": "2026-10-09T18:51:48.903661+00:00"
+  "checked_at_utc": "2026-10-09T19:01:19.349953+00:00",
+  "standalone_experiment_framing_verified": true
 }

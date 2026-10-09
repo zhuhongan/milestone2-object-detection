@@ -1,4 +1,4 @@
-# Expanded source annotation audit
+# Source annotation audit
 
 All 7,343 photographs in the finalized local dataset were inventoried without changing their bytes. Final Object IDs OBJ001–OBJ073 and names are preserved from the supplied sheet. The established Milestone 1 manifests provide exact duplicate decisions and source splits (seed 42).
 
@@ -22,8 +22,8 @@ Coordinates use normalized xyxy on the EXIF-oriented primary RGB frame (frame 0 
 
 **Scope:** these annotations cover visible instances of the assigned folder Object ID. Incidental other classes are not exhaustively annotated. An empty source label is not an annotation that every target class is absent, and these files must not be treated as a fully labelled direct-training dataset of background negatives. Context retained inside pasted crops can include incidental objects.
 
-Synthesis cycles through seeded shuffled class pools and uses every eligible positive source at least once. Source splits are assigned before synthesis. The expanded frozen dataset has 8,000 train, 1,000 validation and 1,000 test composites (10,000 total), with all 73 classes in each split. Each composite uses 2–4 distinct classes and retains repeated instances. Rectangular contextual crops are resized and placed without overlap on synthetic backgrounds. Training-only source augmentations are horizontal flip and mild brightness/contrast changes.
+Synthesis cycles through seeded shuffled class pools and uses every eligible positive source at least once. Source splits are assigned before synthesis. The frozen dataset has 8,000 train, 1,000 validation and 1,000 test composites (10,000 total), with all 73 classes in each split. Each composite uses 2–4 distinct classes and retains repeated instances. Rectangular contextual crops are resized and placed without overlap on synthetic backgrounds. Training-only source augmentations are horizontal flip and mild brightness/contrast changes.
 
 `expanded_dataset_audit.json` and `expanded_dataset_validation.json` archive the generated dataset checks. Twelve pipeline tests passed, covering coordinate transforms, matching, seed reproducibility, complete source coverage, and rejecting an insufficient coverage budget. Raw-image checksums were reverified when finalizing annotations and generating composites.
 
-The earlier 365-source / 1,460-composite model, Word report and metrics remain archived as the baseline. The expanded experiment is now completed; its measured results and updated Word report are archived in `reports/all_photos_seed42/`. More distinct sources increase available image variety; they do not guarantee improved detection accuracy. Near-duplicate captures, shared backgrounds and the gap between synthetic composites and real multi-object scenes remain limitations.
+The Milestone 2 experiment completed 50 epochs of YOLOv8s training. Its measured results and Word report are archived in `reports/all_photos_seed42/`. Near-duplicate captures, shared backgrounds, approximate annotations and the gap between synthetic composites and real multi-object scenes remain limitations.
