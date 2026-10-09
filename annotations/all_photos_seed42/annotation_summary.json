@@ -1,0 +1,22 @@
+{
+  "raw_photos": 7343,
+  "unique_photos": 7315,
+  "duplicates_with_alias_annotations": 28,
+  "unique_status_counts": {
+    "target_present": 6933,
+    "target_absent": 382
+  },
+  "positive_sources_for_synthesis": 6933,
+  "positive_source_split_counts": {
+    "train": 5549,
+    "test": 688,
+    "val": 696
+  },
+  "unique_positive_target_instances": 7080,
+  "explicit_review_overrides": 1379,
+  "all_photo_label_files": 7343,
+  "raw_sources_modified": false,
+  "reviewed_sheets": 151,
+  "annotation_scope": "Visible instances of the folder Object ID; incidental other classes not exhaustively labelled",
+  "independent_human_review": false
+}

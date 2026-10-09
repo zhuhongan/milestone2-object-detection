@@ -1,0 +1,22 @@
+{
+  "completed": true,
+  "photos_processed": 7315,
+  "raw_photos": 7343,
+  "duplicate_copies": 28,
+  "proposals_sha256": "c4bf8bf6debbef5480d4082399d9824610c8d4110063bc1cef9dfdb4a069a1f6",
+  "candidate_counts": {
+    "1": 4001,
+    "0": 87,
+    "3": 753,
+    "2": 1811,
+    "5": 169,
+    "4": 354,
+    "6": 74,
+    "7": 39,
+    "9": 6,
+    "17": 1,
+    "8": 18,
+    "10": 2
+  },
+  "annotation_status": "Proposals require visual review before use"
+}

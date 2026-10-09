@@ -2,7 +2,35 @@
 
 Train a 73-class YOLOv8s detector using synthetic multi-object images made from the finalized shared single-object dataset. Predictions export the final Object IDs, names, confidence scores, and pixel bounding boxes. The shared raw dataset is read-only.
 
-## Dataset and annotations
+## Expanded all-photo annotations (current dataset)
+
+All **7,343 finalized photos** now have annotation records and YOLO label files in `annotations/all_photos_seed42/`. The 28 exact duplicate copies inherit their canonical photo’s annotation and split; synthesis uses unique sources only. Every one of the 7,315 unique photos was inspected on 151 contact sheets, with 1,379 explicit corrections or exclusions recorded in `annotations/all_photo_review_decisions.json`. Model proposals were produced with pinned Grounding DINO on a Colab A100, then visually checked and corrected by the assistant. There is no independent human annotation review.
+
+There are **6,933 unique photos with a visible assigned target**, up from 365 in the original experiment. The other **382 unique photos** have no identifiable visible target of their folder’s Object ID. They remain in the annotation inventory with an exclusion reason. A target-absent record does **not** establish the absence of every other Object ID; do not use its empty label as a universally annotated negative image. Incidental objects from other classes have not been exhaustively labelled. `_bg_` filenames were inspected rather than automatically excluded.
+
+The expanded dataset contains **10,000 composites: 8,000 train / 1,000 validation / 1,000 test**, with seed 42. Seeded per-class cycles guarantee that every eligible positive source is used. The original deduplicated source splits are preserved before synthesis. Source photos retain their original dimensions; EXIF-oriented RGB images are cropped and resized during composition. The shared and local raw photos are unchanged.
+
+```bash
+python generate_dataset.py --raw-root /path/to/final-local/images \
+  --annotations annotations/all_photos_seed42/positive_source_annotations.json \
+  --output data/synthetic_all_photos_seed42 --counts 8000 1000 1000 \
+  --cover-sources --seed 42
+python validate_dataset.py data/synthetic_all_photos_seed42
+```
+
+To train the expanded dataset in a separate Colab run while preserving the original artifacts:
+
+```bash
+python run_colab.py --session milestone2-yolov8s-all-photos-YOUR_UNIQUE_NAME \
+  --gpu A100 --dataset data/synthetic_all_photos_seed42 \
+  --output artifacts/yolov8s_all_photos_seed42
+```
+
+The current Word report, saved model and metrics below describe the **original 1,460-image baseline**. They have not been updated with unmeasured results from the expanded dataset. Retraining and reevaluating on the expanded dataset is required before reporting new performance.
+
+For fresh model-assisted proposals, `inventory_all_sources.py` reads the finalized Milestone 1 manifests, `run_annotation_colab.py` runs the GPU proposal job, and `review_all_annotations.py prepare` creates review sheets. The archived reviewed JSON annotations are sufficient for deterministic synthesis; rerunning proposals cannot replace recorded visual review decisions. Proposal-model revision, environment and GPU-release evidence are archived with the expanded annotations.
+
+## Original baseline dataset and annotations
 
 - Final dataset: https://drive.google.com/drive/folders/1GKLyP17tm5JC0XENv25GeoGgYynm97LS
 - Final Object IDs: https://docs.google.com/spreadsheets/d/1OCBWlTK8JSzrgUxON3thJWAKRKU2Pi-V9Ssn2BbDxds/edit#gid=0
@@ -67,7 +95,7 @@ python predict.py --weights artifacts/yolov8s_seed42/experiment/runs/yolov8s_see
 
 The annotated output and `detections.json` show Object IDs and locations. JSON boxes are `(x1,y1,x2,y2)` in original-image pixels, with the origin at the upper-left. Confidence is a model score rather than a calibrated correctness probability.
 
-## Limits
+## Original baseline limitations
 
 The benchmark consists of synthetic rectangular photo patches, with only three distinct train and one validation/test source image per class. Repeated crops within a split do not create independent source photos. Exact hashes are disjoint, but near-duplicate captures, the same physical objects, or shared backgrounds may cross source splits. Images retain context and some partial targets; annotation precision and incidental background content may affect learning. Test metrics establish performance on this fixed synthesis distribution and do not establish performance on independently photographed real multi-object scenes. Collect and annotate such a test set before claiming real-world generalization.
 
@@ -77,7 +105,7 @@ The benchmark consists of synthetic rectangular photo patches, with only three d
 - https://docs.ultralytics.com/datasets/detect/
 - https://docs.ultralytics.com/modes/train/
 
-## Results and report
+## Original baseline results and report
 
 Completed 50 epochs on a Colab A100. The best saved checkpoint is epoch **30**, selected using validation mAP50–95. The final checkpoint was reevaluated separately on validation and test.
 

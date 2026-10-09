@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "records_verified": 7343,
+  "label_files_verified": 7343,
+  "duplicate_aliases_verified": 28,
+  "all_photo_annotations_sha256": "7fc5dc5e3008a28d41c173f5205b9eac6d13c92dc15b44318e2944d92603af0e",
+  "positive_source_annotations_sha256": "f0438018b2753fec7598c807c297f0884a610454cb79f9e73b0636f430661c70",
+  "review_decisions_sha256": "9de8e0df80252a522763b4719fb7972bb1cc35ad97a7b599c2e978274de0b6c7"
+}
