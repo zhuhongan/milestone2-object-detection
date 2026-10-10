@@ -1,0 +1,8 @@
+{
+  "completed_50_epochs": true,
+  "checkpoint_checksums": true,
+  "selection_peak_confirmed": true,
+  "official_class_mapping": true,
+  "73_test_class_AP_scores": true,
+  "independent_prediction_metric_recomputation": true
+}

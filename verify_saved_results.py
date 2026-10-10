@@ -16,7 +16,7 @@ def read_csv(path):
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('--reports',type=Path,default=ROOT/'reports/all_photos_seed42')
+    parser.add_argument('--reports',type=Path,default=ROOT/'reports/mixed_layouts_seed42')
     args=parser.parse_args()
     reports = args.reports.resolve()
     evidence = reports / "evidence"
@@ -62,6 +62,21 @@ def main():
     assert evaluate(test_predictions, [row for row in manifest if row["split"] == "test"], threshold) == operating
     fixed = [row for row in test_predictions if float(row["confidence"]) >= threshold]
     assert fixed == read_csv(evidence / "test_detections.csv")
+    if audit.get('layouts'):
+        layouts=load(reports/'layout_metrics.json')
+        per_layout=read_csv(reports/'layout_per_class_metrics.csv')
+        for split,predictions in [('val',val_predictions),('test',test_predictions)]:
+            for layout in audit['layouts']:
+                group=[r for r in manifest if r['split']==split and r['layout']==layout]
+                names={Path(r['image']).name for r in group}
+                measured=layouts[split][layout]
+                assert len(group)==measured['images']==audit['counts'][split]['layouts'][layout]['images']
+                assert sum(len(r['targets']) for r in group)==measured['target_instances']
+                assert evaluate([r for r in predictions if r['image'] in names],group,threshold)==measured['operating']
+                rows=[r for r in per_layout if r['split']==split and r['layout']==layout]
+                assert len(rows)==73 and {r['object_id'] for r in rows}=={r['object_id'] for r in mapping}
+                for field,key in [('AP50','mAP50'),('AP50_95','mAP50_95')]:
+                    assert abs(sum(float(r[field]) for r in rows)/73-measured[key])<1e-10
     session = load(evidence / "session_receipt.json")
     assert session["gpu_stopped"] and session["exports_verified"]
     print(json.dumps({"verified": True, "epochs": 50, "selected_epoch": selection["selected_epoch"],

@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "images_verified": 10000,
+  "split_counts": {
+    "train": 8000,
+    "val": 1000,
+    "test": 1000
+  },
+  "classes_per_split": {
+    "train": 73,
+    "val": 73,
+    "test": 73
+  },
+  "target_instances": 59186,
+  "checks": [
+    "all JPEG/label checksums",
+    "no duplicate composite bytes",
+    "official IDs and labels",
+    "normalized finite YOLO boxes",
+    "coordinate transform consistency",
+    "non-overlapping source crops",
+    "source hashes disjoint",
+    "73-class coverage in every split",
+    "fully occupied 2x2/3x3 grids",
+    "patches and targets contained within cells",
+    "no background-only sources",
+    "73-class coverage in every split/layout"
+  ],
+  "layout_counts": {
+    "train": {
+      "3x3": 3200,
+      "2x2": 3200,
+      "random": 1600
+    },
+    "val": {
+      "2x2": 400,
+      "random": 200,
+      "3x3": 400
+    },
+    "test": {
+      "3x3": 400,
+      "2x2": 400,
+      "random": 200
+    }
+  }
+}

@@ -65,10 +65,35 @@ def main():
   fields=['image','class_index','object_id','object_name','confidence','x1','y1','x2','y2'];w=csv.DictWriter(f,fieldnames=fields);w.writeheader();w.writerows(fixedrows)
  operating=evaluate(testrows,[r for r in manifest if r['split']=='test'],threshold)
  write_json(output/'test_operating_metrics.json',operating)
+ # Report each layout separately using the same checkpoint and global val-selected threshold.
+ if audit.get('layouts'):
+  layout_metrics={};layout_perclass=[]
+  for split,rows in [('val',valrows),('test',testrows)]:
+   layout_metrics[split]={}
+   for layout in audit['layouts']:
+    group=[r for r in manifest if r['split']==split and r['layout']==layout]
+    names={Path(r['image']).name for r in group}
+    imagesfile=output/f'{split}_{layout}_images.txt'
+    imagesfile.write_text(''.join(str(dataset/r['image'])+'\n' for r in group))
+    layoutcfg={**cfg,split:str(imagesfile)}
+    layoutcfgpath=output/f'{split}_{layout}_data.yaml'
+    layoutcfgpath.write_text(yaml.safe_dump(layoutcfg,sort_keys=False))
+    result=best.val(data=str(layoutcfgpath),split=split,imgsz=640,batch=a.batch,device=a.device,workers=4,conf=.001,iou=.7,max_det=100,plots=False,save_json=False,project=str(output),name=f'{split}_{layout}_evaluation',exist_ok=False,verbose=False)
+    layout_metrics[split][layout]={'images':len(group),'target_instances':sum(len(r['targets']) for r in group),'precision':float(result.box.mp),'recall':float(result.box.mr),'mAP50':float(result.box.map50),'mAP50_95':float(result.box.map),'operating':evaluate([r for r in rows if r['image'] in names],group,threshold)}
+    for j,c in enumerate(result.box.ap_class_index):
+     c=int(c);layout_perclass.append({'split':split,'layout':layout,**{k:mapping[c][k] for k in ['class_index','object_id','object_name']},'precision':float(result.box.p[j]),'recall':float(result.box.r[j]),'AP50':float(result.box.ap50[j]),'AP50_95':float(result.box.ap[j])})
+  write_json(output/'layout_metrics.json',layout_metrics)
+  with (output/'layout_per_class_metrics.csv').open('w',newline='') as f:
+   writer=csv.DictWriter(f,fieldnames=list(layout_perclass[0]));writer.writeheader();writer.writerows(layout_perclass)
  # Gallery paths selected independently of outcomes; plot all detections at the fixed threshold.
  images=sorted((dataset/'images/test').glob('*.jpg'));selected=random.Random(42).sample(images,6)
+ if audit.get('layouts'):
+  sampler=random.Random(42);selected=[]
+  for layout in audit['layouts']:
+   paths=sorted(dataset/r['image'] for r in manifest if r['split']=='test' and r['layout']==layout)
+   selected.extend(sampler.sample(paths,2))
  gallery=output/'detection_examples';gallery.mkdir(exist_ok=True)
- write_json(gallery/'selection.json',{'seed':42,'rule':'Uniform sample of six sorted test paths independent of predictions','files':[p.name for p in selected]})
+ write_json(gallery/'selection.json',{'seed':42,'rule':'Two sorted test paths sampled per layout, independent of predictions' if audit.get('layouts') else 'Uniform sample of six sorted test paths independent of predictions','files':[p.name for p in selected]})
  byimage={p.name:[] for p in images}
  for row in fixedrows:byimage[row['image']].append(row)
  try:font=ImageFont.truetype('DejaVuSans.ttf',16)

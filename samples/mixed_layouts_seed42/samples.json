@@ -1,0 +1,381 @@
+{
+  "2x2": {
+    "source_image": "images/test/test_00824.jpg",
+    "selection": "First of two seed-42 test paths sampled per layout independently of predictions",
+    "targets": [
+      {
+        "class_index": 3,
+        "object_id": "OBJ004",
+        "object_name": "Toy Car",
+        "xyxy": [
+          118.12029954365322,
+          126.78718968800136,
+          171.77282129015242,
+          150.12231288637435
+        ],
+        "source_path": "images_OBJ004/OBJ004_041.jpg"
+      },
+      {
+        "class_index": 44,
+        "object_id": "OBJ045",
+        "object_name": "Wayfarer Sunglasses",
+        "xyxy": [
+          360.8854755163193,
+          180.34837675094604,
+          610.682988507407,
+          277.6376246043614
+        ],
+        "source_path": "images_OBJ045/OBJ045_040.jpg"
+      },
+      {
+        "class_index": 31,
+        "object_id": "OBJ032",
+        "object_name": "Sound Card",
+        "xyxy": [
+          64.01027515956334,
+          484.8222688947405,
+          185.41793714250835,
+          547.8172498430524
+        ],
+        "source_path": "images_OBJ032/OBJ032_052.jpg"
+      },
+      {
+        "class_index": 35,
+        "object_id": "OBJ036",
+        "object_name": "Pencil case",
+        "xyxy": [
+          489.8303571428571,
+          517.75,
+          526.8571428571429,
+          543.2857142857142
+        ],
+        "source_path": "images_OBJ036/OBJ036_083.jpg"
+      }
+    ],
+    "operating": {
+      "image": "test_00824.jpg",
+      "tp": 4,
+      "fp": 0,
+      "fn": 0,
+      "all_objects_correct": true
+    },
+    "detections": [
+      {
+        "image": "test_00824.jpg",
+        "class_index": "31",
+        "object_id": "OBJ032",
+        "object_name": "Sound Card",
+        "confidence": "0.9592792391777039",
+        "x1": "63.68687057495117",
+        "y1": "485.676025390625",
+        "x2": "185.2712860107422",
+        "y2": "547.7254638671875"
+      },
+      {
+        "image": "test_00824.jpg",
+        "class_index": "3",
+        "object_id": "OBJ004",
+        "object_name": "Toy Car",
+        "confidence": "0.9405784606933594",
+        "x1": "117.91091918945312",
+        "y1": "127.02166748046875",
+        "x2": "171.66134643554688",
+        "y2": "150.03170776367188"
+      },
+      {
+        "image": "test_00824.jpg",
+        "class_index": "44",
+        "object_id": "OBJ045",
+        "object_name": "Wayfarer Sunglasses",
+        "confidence": "0.9172055721282959",
+        "x1": "357.99871826171875",
+        "y1": "183.59817504882812",
+        "x2": "613.01220703125",
+        "y2": "276.6361999511719"
+      },
+      {
+        "image": "test_00824.jpg",
+        "class_index": "35",
+        "object_id": "OBJ036",
+        "object_name": "Pencil case",
+        "confidence": "0.84989333152771",
+        "x1": "491.4183349609375",
+        "y1": "516.0348510742188",
+        "x2": "525.9298095703125",
+        "y2": "543.7719116210938"
+      }
+    ]
+  },
+  "3x3": {
+    "source_image": "images/test/test_00025.jpg",
+    "selection": "First of two seed-42 test paths sampled per layout independently of predictions",
+    "targets": [
+      {
+        "class_index": 53,
+        "object_id": "OBJ054",
+        "object_name": "Purse",
+        "xyxy": [
+          95.71531418391636,
+          96.65956286021641,
+          126.72423144749233,
+          125.02260875701904
+        ],
+        "source_path": "images_OBJ054/OBJ054_078.jpg"
+      },
+      {
+        "class_index": 30,
+        "object_id": "OBJ031",
+        "object_name": "UNO card box",
+        "xyxy": [
+          329.6179703303746,
+          110.06767112868172,
+          368.1204479762486,
+          146.98908737727572
+        ],
+        "source_path": "images_OBJ031/OBJ031_036.jpg"
+      },
+      {
+        "class_index": 6,
+        "object_id": "OBJ007",
+        "object_name": "Apple",
+        "xyxy": [
+          492.881931918008,
+          59.051002860069275,
+          556.436956678118,
+          123.57379082271031
+        ],
+        "source_path": "images_OBJ007/OBJ007_068.jpg"
+      },
+      {
+        "class_index": 18,
+        "object_id": "OBJ019",
+        "object_name": "Plant",
+        "xyxy": [
+          10.025774776935577,
+          220.01468169689178,
+          193.0,
+          403.0
+        ],
+        "source_path": "images_OBJ019/OBJ019_056.jpg"
+      },
+      {
+        "class_index": 35,
+        "object_id": "OBJ036",
+        "object_name": "Pencil case",
+        "xyxy": [
+          323.30357142857144,
+          352.5,
+          345.57142857142856,
+          367.8571428571429
+        ],
+        "source_path": "images_OBJ036/OBJ036_083.jpg"
+      },
+      {
+        "class_index": 1,
+        "object_id": "OBJ002",
+        "object_name": "water bottle",
+        "xyxy": [
+          433.0,
+          297.84701149804255,
+          549.5154955727713,
+          342.69610731942316
+        ],
+        "source_path": "images_OBJ002/OBJ002_083.jpg"
+      },
+      {
+        "class_index": 24,
+        "object_id": "OBJ025",
+        "object_name": "Watch",
+        "xyxy": [
+          62.67142360551017,
+          456.51113653182983,
+          130.63280609675815,
+          614.7632346834455
+        ],
+        "source_path": "images_OBJ025/OBJ025_030.jpg"
+      },
+      {
+        "class_index": 21,
+        "object_id": "OBJ022",
+        "object_name": "Guitar",
+        "xyxy": [
+          263.49027478694916,
+          441.0,
+          368.6914427621024,
+          635.9337560789926
+        ],
+        "source_path": "images_OBJ022/OBJ022_020.jpeg"
+      },
+      {
+        "class_index": 27,
+        "object_id": "OBJ028",
+        "object_name": "banana",
+        "xyxy": [
+          492.14111818586076,
+          463.3708359854562,
+          553.2593490055629,
+          601.8631640842982
+        ],
+        "source_path": "images_OBJ028/OBJ028_012.jpg"
+      }
+    ],
+    "operating": {
+      "image": "test_00025.jpg",
+      "tp": 8,
+      "fp": 0,
+      "fn": 1,
+      "all_objects_correct": false
+    },
+    "detections": [
+      {
+        "image": "test_00025.jpg",
+        "class_index": "18",
+        "object_id": "OBJ019",
+        "object_name": "Plant",
+        "confidence": "0.9802565574645996",
+        "x1": "9.547882080078125",
+        "y1": "219.47366333007812",
+        "x2": "193.389892578125",
+        "y2": "403.6593322753906"
+      },
+      {
+        "image": "test_00025.jpg",
+        "class_index": "21",
+        "object_id": "OBJ022",
+        "object_name": "Guitar",
+        "confidence": "0.9630601406097412",
+        "x1": "264.76715087890625",
+        "y1": "439.9380798339844",
+        "x2": "368.51483154296875",
+        "y2": "636.7547607421875"
+      },
+      {
+        "image": "test_00025.jpg",
+        "class_index": "6",
+        "object_id": "OBJ007",
+        "object_name": "Apple",
+        "confidence": "0.955778956413269",
+        "x1": "492.5584716796875",
+        "y1": "58.696407318115234",
+        "x2": "557.3204345703125",
+        "y2": "124.12570190429688"
+      },
+      {
+        "image": "test_00025.jpg",
+        "class_index": "1",
+        "object_id": "OBJ002",
+        "object_name": "water bottle",
+        "confidence": "0.9551864862442017",
+        "x1": "433.59686279296875",
+        "y1": "297.068115234375",
+        "x2": "549.765869140625",
+        "y2": "343.9693603515625"
+      },
+      {
+        "image": "test_00025.jpg",
+        "class_index": "27",
+        "object_id": "OBJ028",
+        "object_name": "banana",
+        "confidence": "0.9530820846557617",
+        "x1": "489.3338623046875",
+        "y1": "463.05096435546875",
+        "x2": "554.015869140625",
+        "y2": "612.7461547851562"
+      },
+      {
+        "image": "test_00025.jpg",
+        "class_index": "24",
+        "object_id": "OBJ025",
+        "object_name": "Watch",
+        "confidence": "0.9452036023139954",
+        "x1": "61.76556396484375",
+        "y1": "456.76190185546875",
+        "x2": "131.70269775390625",
+        "y2": "616.2318725585938"
+      },
+      {
+        "image": "test_00025.jpg",
+        "class_index": "30",
+        "object_id": "OBJ031",
+        "object_name": "UNO card box",
+        "confidence": "0.92033451795578",
+        "x1": "329.9825439453125",
+        "y1": "109.87244415283203",
+        "x2": "368.3404541015625",
+        "y2": "147.5989990234375"
+      },
+      {
+        "image": "test_00025.jpg",
+        "class_index": "35",
+        "object_id": "OBJ036",
+        "object_name": "Pencil case",
+        "confidence": "0.7178271412849426",
+        "x1": "321.95587158203125",
+        "y1": "351.4502868652344",
+        "x2": "345.64385986328125",
+        "y2": "368.1938781738281"
+      }
+    ]
+  },
+  "random": {
+    "source_image": "images/test/test_00367.jpg",
+    "selection": "First of two seed-42 test paths sampled per layout independently of predictions",
+    "targets": [
+      {
+        "class_index": 39,
+        "object_id": "OBJ040",
+        "object_name": "Clutcher",
+        "xyxy": [
+          314.5861232652577,
+          218.08643690745035,
+          460.7187325013887,
+          381.05716133117676
+        ],
+        "source_path": "images_OBJ040/OBJ040_004.JPG"
+      },
+      {
+        "class_index": 55,
+        "object_id": "OBJ056",
+        "object_name": "Trader Joe's Bag",
+        "xyxy": [
+          162.6762880944902,
+          175.0,
+          251.85140466386343,
+          328.97998428344727
+        ],
+        "source_path": "images_OBJ056/OBJ056_001.jpg"
+      }
+    ],
+    "operating": {
+      "image": "test_00367.jpg",
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "all_objects_correct": true
+    },
+    "detections": [
+      {
+        "image": "test_00367.jpg",
+        "class_index": "39",
+        "object_id": "OBJ040",
+        "object_name": "Clutcher",
+        "confidence": "0.9682446122169495",
+        "x1": "314.96844482421875",
+        "y1": "217.57679748535156",
+        "x2": "462.5438232421875",
+        "y2": "381.68359375"
+      },
+      {
+        "image": "test_00367.jpg",
+        "class_index": "55",
+        "object_id": "OBJ056",
+        "object_name": "Trader Joe's Bag",
+        "confidence": "0.9457319974899292",
+        "x1": "163.21701049804688",
+        "y1": "175.57308959960938",
+        "x2": "254.19552612304688",
+        "y2": "329.69879150390625"
+      }
+    ]
+  }
+}

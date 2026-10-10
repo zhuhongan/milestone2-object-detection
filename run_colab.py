@@ -6,10 +6,45 @@ import transfer
 from export_helpers import package_archive
 ROOT=Path(__file__).resolve().parent
 
+def run_cli_checked(base,*args):
+ # A disconnected CLI websocket can leave non-daemon threads alive after a traceback.
+ # Stop that local client; never interrupt or shut down the remote training kernel here.
+ process=subprocess.Popen([*base,*args],cwd=ROOT,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,bufsize=1)
+ try:
+  for line in process.stdout:
+   print(transfer.sanitize_cli_output(line),end='',flush=True)
+   if 'RuntimeError: Connection was lost.' in line:
+    raise RuntimeError('Colab client websocket disconnected')
+  if process.wait():raise RuntimeError(f'Colab {args[0]} failed')
+ finally:
+  if process.poll() is None:
+   process.terminate()
+   try:process.wait(timeout=5)
+   except subprocess.TimeoutExpired:process.kill();process.wait()
+  process.stdout.close()
+
+def retry_idempotent(action,attempts=5,delay=time.sleep):
+ for attempt in range(attempts):
+  try:return action()
+  except RuntimeError:
+   if attempt==attempts-1:raise
+   print(f'Reconnecting for idempotent setup ({attempt+2}/{attempts})',flush=True)
+   delay(min(2**attempt,8))
+
+def upload_with_retries(cli,session,local,remote,attempts=5,delay=time.sleep):
+ if attempts<1:raise ValueError('At least one upload attempt is required')
+ for attempt in range(attempts):
+  try:
+   return cli('upload','-s',session,str(local),remote)
+  except RuntimeError:
+   if attempt==attempts-1:raise
+   print(f'Retrying upload of {Path(local).name} ({attempt+2}/{attempts})',flush=True)
+   delay(min(2**attempt,8))
+
 def main():
  p=argparse.ArgumentParser();p.add_argument('--session',required=True);p.add_argument('--gpu',default='A100',choices=['A100','L4','T4']);p.add_argument('--config',type=Path,default=ROOT/'.colab-sessions.json');p.add_argument('--dataset',type=Path,default=ROOT/'data/synthetic_seed42');p.add_argument('--output',type=Path,default=ROOT/'artifacts/yolov8s_seed42');p.add_argument('--attach',action='store_true');p.add_argument('--recover',action='store_true');a=p.parse_args()
  out=a.output.resolve();out.mkdir(parents=True,exist_ok=True);base=['colab','--config',str(a.config.resolve())]
- def cli(*args):return transfer.run_cli(base,*args,cwd=ROOT)
+ def cli(*args):return run_cli_checked(base,*args)
  def download(remote,destination,size=None,digest=None):
   temp=destination.with_name(destination.name+'.partial')
   for attempt in range(3):
@@ -36,11 +71,11 @@ def main():
     while chunk:=f.read(32*1024*1024):
      index=len(manifest);name=f'part-{index:05d}';(parts/name).write_bytes(chunk);manifest.append({'name':name,'size':len(chunk),'sha256':hashlib.sha256(chunk).hexdigest()})
    manifestpath=out/'input_manifest.json';manifestpath.write_text(json.dumps({'parts':manifest,'archive_sha256':transfer.sha256(archive)},indent=2)+'\n')
-   transfer.ensure_remote_directories(cli,a.session,out/'setup',['/content/milestone2/input.parts'])
-   for part in manifest:cli('upload','-s',a.session,str(parts/part['name']),'/content/milestone2/input.parts/'+part['name'])
-   cli('upload','-s',a.session,str(manifestpath),'/content/milestone2/input_manifest.json')
+   retry_idempotent(lambda:transfer.ensure_remote_directories(cli,a.session,out/'setup',['/content/milestone2/input.parts']))
+   for part in manifest:upload_with_retries(cli,a.session,parts/part['name'],'/content/milestone2/input.parts/'+part['name'])
+   upload_with_retries(cli,a.session,manifestpath,'/content/milestone2/input_manifest.json')
    receiver=out/'receive.py';receiver.write_text("import json,hashlib,tarfile\nfrom pathlib import Path\nr=Path('/content/milestone2');m=json.loads((r/'input_manifest.json').read_text());a=r/'input.tar.gz'\nwith a.open('wb') as f:\n for p in m['parts']:\n  b=(r/'input.parts'/p['name']).read_bytes();assert len(b)==p['size'] and hashlib.sha256(b).hexdigest()==p['sha256'];f.write(b)\nassert hashlib.sha256(a.read_bytes()).hexdigest()==m['archive_sha256']\nwith tarfile.open(a) as t:\n for item in t.getmembers():\n  dest=(r/item.name).resolve();assert r in dest.parents and (item.isfile() or item.isdir())\n t.extractall(r,filter='data')\na.unlink()\nprint('Dataset and source upload verified',flush=True)\n")
-   cli('exec','-s',a.session,'-f',str(receiver),'--timeout','600');protect=True
+   retry_idempotent(lambda:cli('exec','-s',a.session,'-f',str(receiver),'--timeout','600'));protect=True
    cli('exec','-s',a.session,'-f',str(ROOT/'colab_worker.py'),'--timeout','21600')
   archive,manifest=transfer.retrieve_archive(download,out,'artifacts','experiment.tar.gz')
   destination=out/'experiment'

@@ -1,0 +1,8 @@
+test_disconnected_client_is_terminated_instead_of_hanging (test_upload_recovery.UploadRecovery.test_disconnected_client_is_terminated_instead_of_hanging) ... ok
+test_exhausted_upload_still_fails (test_upload_recovery.UploadRecovery.test_exhausted_upload_still_fails) ... ok
+test_retry_uses_identical_session_and_destination (test_upload_recovery.UploadRecovery.test_retry_uses_identical_session_and_destination) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.015s
+
+OK

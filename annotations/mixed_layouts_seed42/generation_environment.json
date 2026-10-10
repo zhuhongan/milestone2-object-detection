@@ -1,0 +1,8 @@
+{
+  "python": "3.12.14",
+  "Pillow": "12.3.0",
+  "numpy": "2.3.5",
+  "seed": 42,
+  "manifest_sha256": "352b1d517760a5ba670f23adc60335b7860787315025cfe087d76d734fb858dc",
+  "source_annotations_sha256": "f0438018b2753fec7598c807c297f0884a610454cb79f9e73b0636f430661c70"
+}
