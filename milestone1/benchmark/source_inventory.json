@@ -1,0 +1,28 @@
+{
+  "purpose": "Source review only; original group files are not executed or modified",
+  "models": {
+    "vgg16": {
+      "source": "group/VGG16.py; group/VGG16.ipynb",
+      "original": "Frozen Keras VGG16; Flatten->Dense256->BatchNorm->LeakyReLU->Dropout0.5; RMSprop; own split"
+    },
+    "resnet50": {
+      "source": "group/Deep Learning Project.html",
+      "original": "Frozen Keras ResNet50 global average features; Bayesian search30trials; head; early stopping"
+    },
+    "mobilenetv2_140": {
+      "source": "group/project (1).ipynb",
+      "original": "Frozen Keras MobileNetV2 alpha1.4; augmented feature cache; Bayesian search40trials; filename background exclusion"
+    },
+    "convnext_tiny": {
+      "source": "train.py",
+      "original": "Torchvision ConvNeXt Tiny; 5frozen+up to15fine with early stopping; own head"
+    }
+  },
+  "changes": "Common ImageNet backbones in PyTorch (Torchvision ResNet V1.5 and timm MobileNet RA weights differ from original Keras checkpoints); global pooled features and common256-LayerNorm-GELU-Dropout0.3 head; common augmentation,split,optimizer,5+15epochs; no tuning or early stopping; no arbitrary background exclusions",
+  "files": {
+    "group/project (1).ipynb": "396957ef1638547277deb255d6d1e9dde8469c6f82092b41f1ce2d872daf5b4e",
+    "group/VGG16.py": "d1a87ea80f6fe56f4f921756cfa2974cb333d63404276d2b39782e1eba0ded0c",
+    "group/Deep Learning Project.html": "1a03e9b3d7acef38f38685455dc0f9eb9ef9f3873a6f03ea018ac8654085e4ca",
+    "group/VGG16.ipynb": "ee54f3f9e56caba561ae573be08030272b7bc45ca63bbd89cc555616805856b2"
+  }
+}

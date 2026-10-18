@@ -1,0 +1,9 @@
+{
+  "source_url": "https://docs.google.com/spreadsheets/d/1OCBWlTK8JSzrgUxON3thJWAKRKU2Pi-V9Ssn2BbDxds/edit#gid=0",
+  "sheet_gid": "0",
+  "source_sha256": "9afb856b84968c77a08a8870432cdc7cacb09e303074cfeaaf686a46b7306d9d",
+  "mapping_sha256": "393ad70f4c2a4e6b5dab126191643c3326794496f7c86ff216cabac3274f6464",
+  "class_count": 73,
+  "transform": "Trim outer whitespace only; preserve official IDs, names, and folders; sort by object_id.",
+  "verified_against_sheet": true
+}

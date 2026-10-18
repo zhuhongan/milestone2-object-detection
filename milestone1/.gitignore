@@ -1,0 +1,16 @@
+data/
+artifacts/
+runs/
+output/
+tmp/
+reports/
+.colab*
+.venv*/
+__pycache__/
+*.pyc
+*.pt
+*.pth
+*.tar.gz
+*.zip
+*_live_demo/
+runtime_model_cache/

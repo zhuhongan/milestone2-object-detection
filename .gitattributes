@@ -3,3 +3,5 @@
 *.png binary
 *.jpg binary
 *.docx binary
+milestone1/prepared/*.csv -text
+milestone1/metadata/*.csv -text whitespace=cr-at-eol

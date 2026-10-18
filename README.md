@@ -1,5 +1,7 @@
 # Milestone 2 Object Detection with YOLOv8
 
+Milestone 1 classification code is in **[milestone1/](milestone1/README.md)**, including the four-model 20-epoch comparison, preprocessing, fixed seed-42 splits, Colab notebooks, report generation and the live ConvNeXt-Tiny demo. The object-detection pipeline below remains at the repository root.
+
 Train a 73-class YOLOv8s detector using synthetic multi-object images from the finalized shared single-object dataset. Predictions export final Object IDs, names, confidence scores and pixel bounding boxes. The shared raw dataset remains read-only.
 
 ## Dataset and annotations
